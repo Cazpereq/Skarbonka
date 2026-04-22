@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Skarbonka</title>
+    <meta
+      name="description"
+      content="Skarbonka to lekka aplikacja do zapisywania wpłat, wydatków i pilnowania celu oszczędzania."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <main class="app">
+        <section class="card intro-card">
+          <div>
+            <p class="eyebrow">Codzienna kontrola oszczędności</p>
+            <h1>Skarbonka</h1>
+            <p class="intro-text">
+              Dodawaj wpłaty i wydatki, pilnuj celu i trzymaj motywację zawsze pod ręką.
+            </p>
+          </div>
+        </section>
+
+        <section class="card balance-card">
+          <div class="section-head">
+            <div>
+              <p class="section-label">Aktualne saldo</p>
+              <p class="balance-amount" id="balanceAmount">0,00 zł</p>
+            </div>
+            <span class="balance-badge neutral" id="balanceBadge">Na zero</span>
+          </div>
+          <p class="support-text" id="balanceHint">
+            Zacznij od pierwszej wpłaty, żeby uruchomić swoją skarbonkę.
+          </p>
+        </section>
+
+        <section class="card pig-card">
+          <div class="pig-copy">
+            <p class="section-label">Świnka</p>
+            <p class="pig-text" id="pigStatus">
+              Każda wpłata przybliża Cię do celu. Małe kwoty też robią różnicę.
+            </p>
+          </div>
+          <div class="pig-stage" id="pigStage" aria-hidden="true">
+            <div class="coin coin-a"></div>
+            <div class="coin coin-b"></div>
+            <div class="coin coin-c"></div>
+            <div class="pig">
+              <div class="pig-ear"></div>
+              <div class="pig-body">
+                <div class="pig-slot"></div>
+                <div class="pig-eye"></div>
+                <div class="pig-cheek"></div>
+              </div>
+              <div class="pig-leg pig-leg-a"></div>
+              <div class="pig-leg pig-leg-b"></div>
+              <div class="pig-tail"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card goal-card">
+          <div class="section-head compact">
+            <div>
+              <p class="section-label">Cel oszczędzania</p>
+              <h2 class="section-title" id="goalTitle">Ustaw swój cel</h2>
+            </div>
+            <span class="inline-status" id="goalSaveState">Gotowe</span>
+          </div>
+
+          <form id="goalForm" novalidate>
+            <div class="field-grid">
+              <label class="field">
+                <span>Nazwa celu</span>
+                <input
+                  type="text"
+                  id="goalName"
+                  name="goalName"
+                  maxlength="60"
+                  placeholder="Np. Poduszka finansowa"
+                  autocomplete="off"
+                />
+              </label>
+
+              <label class="field">
+                <span>Kwota celu</span>
+                <input
+                  type="number"
+                  id="goalAmount"
+                  name="goalAmount"
+                  min="0"
+                  step="0.01"
+                  inputmode="decimal"
+                  placeholder="Np. 5000"
+                />
+              </label>
+            </div>
+
+            <p class="form-message" id="goalMessage" role="status" aria-live="polite"></p>
+            <button type="submit" class="button primary" id="goalSubmit">
+              Ustaw cel
+            </button>
+          </form>
+
+          <div class="goal-progress">
+            <div class="progress-meta">
+              <span>Postęp celu</span>
+              <strong id="goalPercent">0%</strong>
+            </div>
+            <div class="progress-bar" aria-hidden="true">
+              <div class="progress-fill" id="goalProgressFill"></div>
+            </div>
+            <div class="goal-stats">
+              <div>
+                <span>Odłożone</span>
+                <strong id="goalSaved">0,00 zł</strong>
+              </div>
+              <div>
+                <span>Brakuje</span>
+                <strong id="goalMissing">0,00 zł</strong>
+              </div>
+              <div>
+                <span>Realizacja</span>
+                <strong id="goalRatio">0%</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card transaction-card">
+          <div class="section-head compact">
+            <div>
+              <p class="section-label">Dodaj transakcję</p>
+              <h2 class="section-title">Wpłata albo wydatek</h2>
+            </div>
+            <span class="inline-status" id="transactionSaveState">Gotowe</span>
+          </div>
+
+          <form id="transactionForm" novalidate>
+            <div class="type-toggle" role="tablist" aria-label="Typ transakcji">
+              <button
+                type="button"
+                class="toggle-option active"
+                id="typeIncome"
+                data-type="income"
+                aria-pressed="true"
+              >
+                Wpłata
+              </button>
+              <button
+                type="button"
+                class="toggle-option"
+                id="typeExpense"
+                data-type="expense"
+                aria-pressed="false"
+              >
+                Wydatek
+              </button>
+            </div>
+
+            <div class="field-grid">
+              <label class="field">
+                <span>Kwota</span>
+                <input
+                  type="number"
+                  id="transactionAmount"
+                  name="transactionAmount"
+                  min="0"
+                  step="0.01"
+                  inputmode="decimal"
+                  placeholder="Np. 120"
+                />
+              </label>
+
+              <label class="field">
+                <span>Data</span>
+                <input type="date" id="transactionDate" name="transactionDate" />
+              </label>
+            </div>
+
+            <label class="field">
+              <span>Opis</span>
+              <input
+                type="text"
+                id="transactionDescription"
+                name="transactionDescription"
+                maxlength="80"
+                placeholder="Np. Premia albo kawa na mieście"
+                autocomplete="off"
+              />
+            </label>
+
+            <p class="form-message" id="transactionMessage" role="alert" aria-live="assertive"></p>
+            <button type="submit" class="button primary" id="transactionSubmit">
+              Dodaj transakcję
+            </button>
+          </form>
+        </section>
+
+        <section class="card motivation-card" id="motivationCard">
+          <p class="section-label">Motywacja</p>
+          <h2 class="section-title" id="motivationTitle">Każda kwota ma znaczenie</h2>
+          <p class="motivation-text" id="motivationText">
+            Wystarczy jeden ruch, żeby saldo zaczęło rosnąć.
+          </p>
+        </section>
+
+        <section class="card history-card">
+          <div class="section-head compact">
+            <div>
+              <p class="section-label">Historia</p>
+              <h2 class="section-title">Twoje transakcje</h2>
+            </div>
+            <button type="button" class="button subtle" id="clearHistoryButton">
+              Wyczyść historię
+            </button>
+          </div>
+          <p class="history-status" id="historyState">Brak zapisanych transakcji.</p>
+          <ul class="history-list" id="historyList" aria-live="polite"></ul>
+        </section>
+
+        <section class="card badges-card">
+          <div class="section-head compact">
+            <div>
+              <p class="section-label">Odznaki</p>
+              <h2 class="section-title">Małe sukcesy po drodze</h2>
+            </div>
+          </div>
+          <div class="badges-grid" id="badgesGrid"></div>
+        </section>
+      </main>
+
+      <div class="confetti-layer" id="confettiLayer" aria-hidden="true"></div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
